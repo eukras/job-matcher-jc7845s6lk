@@ -4,12 +4,14 @@
 
 Match jobseekers to jobs by skills. 
 
+
 ## Results
 
-* It performs the given matching challenge of 10 jobs and 10 job seekers in ~80ms, producing 49 matches.
-* It matches jobs and job_seeker files of 10,000 lines each in ~15s, producing 4,000,000 matches. 
-* Two matching strategies were implemented, though they were found to perform about the same.
-* If we can discard matches under 50%, however, the preemptive matching strategy can cut this time to 8.6s. 
+* `main.py` performs the given matching challenge of 10 jobs and 10 job seekers in ~80ms, producing 49 matches.
+* It matches jobs and job_seeker files of 10,000 lines each in ~15s, producing ~4,000,000 matches. 
+* Two matching strategies were implemented, naivce and preemptive, and found to perform about the same.
+* If we can discard matches under 50%, however, the preemptive matching strategy can cut this time to 8-9s. 
+
 
 ## Implementation Decisions
 
@@ -20,6 +22,7 @@ Match jobseekers to jobs by skills.
 * Use a strategy pattern to compare different implementations:
   * Allow multiple job-matching strategies in `lib/matcher/`, switched with `--matcher`
   * Allow multiple output formats in `lib/writer/`, switched with `--writer`.
+
 
 ## Success Criteria
 
@@ -34,6 +37,7 @@ Match jobseekers to jobs by skills.
 * Tests: Is your code covered by automated tests?
   * Just run `python -m pytest test/` for results.
   * Or for code coverage: `coverage report -m` (85%).
+
 
 ## Installation
 
@@ -89,6 +93,7 @@ Options:
   --num_job_seekers INTEGER  [default: (1000)]
   --help                     Show this message and exit.
 ```
+
 
 ## Examples and timings
 
@@ -175,7 +180,8 @@ user	0m0.056s
 sys	0m0.020s
 ```
 
-### Generating a large dataset (2m13s)
+
+### Generating a large dataset (~1s)
 
 For testing performance we'll generate from large data with Faker...
 
@@ -184,7 +190,10 @@ $ time python generate.py --num_jobs=10000 --num_job_seekers=10000
 Wrote 10000 jobs to datasets/generated/jobs.csv
 Wrote 10000 job seekers to datasets/generated/job_seekers.csv
 
-real	2m13.522s
+real	0m0.679s
+user	0m0.654s
+sys	    0m0.024s
+
 ```
 
 If we look at these output files, we find:
@@ -192,29 +201,29 @@ If we look at these output files, we find:
 ```
 $ head datasets/generated/jobs.csv
 id,title,required_skills
-1,"Accountant, chartered certified","['Skill 82', 'Skill 79']"
-2,Paediatric nurse,"['Skill 78', 'Skill 39']"
-3,Arts development officer,"['Skill 53', 'Skill 21', 'Skill 2', 'Skill 35', 'Skill 35', 'Skill 16']"
-4,Chartered management accountant,"['Skill 14', 'Skill 68']"
-5,Barista,"['Skill 85', 'Skill 53', 'Skill 93', 'Skill 88', 'Skill 56', 'Skill 30']"
-6,Patent examiner,"['Skill 36', 'Skill 78', 'Skill 40', 'Skill 36', 'Skill 46']"
-7,Production engineer,"['Skill 7', 'Skill 94']"
-8,Food technologist,"['Skill 45', 'Skill 79', 'Skill 47', 'Skill 24']"
-9,Waste management officer,"['Skill 88', 'Skill 33', 'Skill 21', 'Skill 47', 'Skill 81']"
+1,Hotel manager,"Skill 46, Skill 1, Skill 97"
+2,Early years teacher,"Skill 89, Skill 15"
+3,Herpetologist,"Skill 93, Skill 7, Skill 88, Skill 61, Skill 21, Skill 70"
+4,Mining engineer,"Skill 55, Skill 47, Skill 78, Skill 17"
+5,Financial controller,"Skill 49, Skill 29, Skill 53, Skill 78, Skill 83"
+6,"Buyer, industrial","Skill 16, Skill 96, Skill 44, Skill 58"
+7,Chief Marketing Officer,"Skill 98, Skill 27, Skill 51, Skill 77, Skill 90"
+8,Civil Service administrator,"Skill 32, Skill 92"
+9,Chemical engineer,"Skill 49, Skill 29, Skill 16, Skill 36, Skill 54"
 ```
 
 ```
 $ head datasets/generated/job_seekers.csv
 id,name,skills
-1,Debra Ferguson,"['Skill 18', 'Skill 13', 'Skill 99', 'Skill 92']"
-2,Amanda Brown,"['Skill 36', 'Skill 62']"
-3,Kathleen Charles,"['Skill 76', 'Skill 30', 'Skill 65']"
-4,Darren Wall,['Skill 59']
-5,Jennifer Ward,"['Skill 72', 'Skill 4', 'Skill 74', 'Skill 12']"
-6,Christian Torres,"['Skill 3', 'Skill 65', 'Skill 16']"
-7,Calvin Barnett,"['Skill 9', 'Skill 95']"
-8,Chad Gray,"['Skill 54', 'Skill 17', 'Skill 3', 'Skill 82', 'Skill 12', 'Skill 85']"
-9,Christina Johnson,"['Skill 39', 'Skill 96', 'Skill 68', 'Skill 26']"
+1,Cheryl Page,"Skill 76, Skill 95, Skill 29, Skill 30, Skill 92, Skill 47"
+2,Paige Smith,"Skill 26, Skill 69, Skill 36"
+3,Katherine Trujillo,"Skill 12, Skill 56"
+4,Kathleen Bailey,"Skill 86, Skill 35, Skill 9, Skill 99"
+5,Michael Stephenson,"Skill 7, Skill 85, Skill 61, Skill 59"
+6,Daniel Yates,"Skill 53, Skill 76, Skill 44"
+7,Samantha Andrews,"Skill 81, Skill 87, Skill 66, Skill 86"
+8,Matthew Cuevas,"Skill 39, Skill 50, Skill 75, Skill 53, Skill 4"
+9,Dominic Gomez,Skill 76
 ```
 
 ```
@@ -224,7 +233,8 @@ $ wc -l datasets/generated/*
   20002 total
 ```
 
-## Naive matching on generated dataset (1m15s)
+
+## Naive matching on generated dataset (15s)
 
 Running the same matching operation on the generated CSV Files:
 
@@ -297,8 +307,10 @@ And finally, we can halve this again by piping the ouput to a file rather than e
 time python main.py --dataset=generated > output.csv  # <-- Now 15s
 ```
 
+Not much to be gained by caching, though. Putting an LRU cache on the percentage calculations only slows it down.
 
-## Implementing preemptive matching 
+
+## Preemptive matching (15s)
 
 The naive implementation is not as slow as might be expected for brute-forcing 100,000,000 skillset comparisons. 
 
@@ -306,13 +318,11 @@ However, it is O(n^2), and we can probably improve that at the cost of keeping m
 
 In this approach, we read through jobs and jobseekers to create an index of unique skill sets. We compare the possible skillset combinations and then expand this to include the jobs and job seekers that have those skills. 
 
-Unfortunately, this performs just about identically on large and small datasets, and is not worth the added complexity:
+Unfortunately, this performs just about identically to the naive implementation on large and small datasets. So, is not worth the added complexity:
 
 ```
 time python main.py --matcher=preemptive                      # <-- Still about 80ms
-time python main.py --matcher=preemptive --dataset=generated  # <-- Still about 30s
+time python main.py --matcher=preemptive --dataset=generated  # <-- Still about 30s (or 15s if piped to a file)
 ```
 
-However, this approach would be much faster if we were to apply a threshold to the percentage matches we woudl accept. The great majority of matches are for only one skill, and for under a 60% match. If I change the preemptive strategy to ignore anything under 60%, which it will do more efficiently than the naive strategy, then we get to 8-9s.
-
-The set operations are sufficiently efficient that putting an LRU cache on the percentage calculations only slows it down.
+However, this approach would be much faster if we were to apply a threshold to the percentage matches we would accept. The great majority of matches are for only one skill, and for under a 60% match. If I change the preemptive strategy to ignore anything under 60%, which it will do more efficiently than the naive strategy, then we get to 8-9s.
