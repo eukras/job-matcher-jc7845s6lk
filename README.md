@@ -33,7 +33,7 @@ Match jobseekers to jobs by skills.
   * It's tested on 10,000 job and job_seekers as noted. 
 * Tests: Is your code covered by automated tests?
   * Just run `python -m pytest test/` for results.
-  * Or for code coverage: `coverage report -m` (currently 91%).
+  * Or for code coverage: `coverage report -m` (85%).
 
 ## Installation
 
