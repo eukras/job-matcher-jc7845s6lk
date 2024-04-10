@@ -2,6 +2,7 @@ from faker import Faker
 
 from ..skills import fake_skillset, join_skills_list, split_skills_list
 
+fake = Faker()
 
 job_columns = ["id", "title", "required_skills"]
 
@@ -32,7 +33,6 @@ def fake_job(id: int) -> dict:
     """
     Create a fake job seeker for generated CSV (or other purposes)
     """
-    fake = Faker()
     return dict(
         id=int(id),
         title=fake.job(),
