@@ -224,7 +224,7 @@ $ wc -l datasets/generated/*
   20002 total
 ```
 
-## Naive matching on generated dataset (1m59s)
+## Naive matching on generated dataset (1m15s)
 
 Running the same matching operation on the generated CSV Files:
 
@@ -304,7 +304,7 @@ The naive implementation is not as slow as might be expected for brute-forcing 1
 
 However, it is O(n^2), and we can probably improve that at the cost of keeping more data in memory.
 
-In this approach, we read through jobs and jobseekers to create an index of unique skill sets for both jobs and job_seekers. We find the matching skillsets and generate the results from these, which are shorter.
+In this approach, we read through jobs and jobseekers to create an index of unique skill sets. We compare the possible skillset combinations and then expand this to include the jobs and job seekers that have those skills. 
 
 Unfortunately, this performs just about identically on large and small datasets, and is not worth the added complexity:
 
@@ -313,6 +313,6 @@ time python main.py --matcher=preemptive                      # <-- Still about 
 time python main.py --matcher=preemptive --dataset=generated  # <-- Still about 30s
 ```
 
-However, this approach could be much faster if we were to apply a threshold to the percentage matches we woudl accept. The great majority of matches are for only one skill, and for under a 60% match. If I change the preemptive strategy to ignore anything under 60%, which it will do more efficiently than the naive strategy, then we get to 8-9s.
+However, this approach would be much faster if we were to apply a threshold to the percentage matches we woudl accept. The great majority of matches are for only one skill, and for under a 60% match. If I change the preemptive strategy to ignore anything under 60%, which it will do more efficiently than the naive strategy, then we get to 8-9s.
 
-Putting an LRU cache on the percentage calculations slows it down, however. 
+The set operations are sufficiently efficient that putting an LRU cache on the percentage calculations only slows it down.
