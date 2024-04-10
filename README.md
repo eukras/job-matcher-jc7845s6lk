@@ -181,9 +181,9 @@ sys	0m0.020s
 ```
 
 
-### Generating a large dataset (~1s)
+### Generating a bigger dataset (~1s)
 
-For testing performance we'll generate from large data with Faker...
+For testing performance we'll generate some bigger data files with Faker...
 
 ```
 $ time python generate.py --num_jobs=10000 --num_job_seekers=10000
