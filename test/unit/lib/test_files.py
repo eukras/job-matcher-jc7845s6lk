@@ -20,13 +20,13 @@ def test_without_headers():
     9,Python Developer,"Python, SQL, Problem Solving, Self Motivated"
     """
 
-    def init_jobs_row(row):
+    def read_jobs_row(row):
         return row
 
     table = read_csv(
         file_path=JOBS_FILE_PATH,
         file_columns=JOBS_COLUMNS,
-        init_row=init_jobs_row,
+        init_row=read_jobs_row,
         ignore_header=True,
     )
 

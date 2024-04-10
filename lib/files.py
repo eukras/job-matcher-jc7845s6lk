@@ -10,8 +10,8 @@ https://medium.com/casual-inference/the-most-time-efficient-ways-to-import-csv-d
 import csv
 from typing import Callable, Generator
 
-from lib.data.jobs import init_job, job_columns
-from lib.data.job_seekers import init_job_seeker, job_seeker_columns
+from lib.data.jobs import read_job, job_columns
+from lib.data.job_seekers import read_job_seeker, job_seeker_columns
 
 
 def read_csv(
@@ -38,14 +38,14 @@ def match_files(
     jobs = read_csv(
         file_path=job_file_path,
         file_columns=job_columns,
-        init_row=init_job,
+        init_row=read_job,
         ignore_header=True,
     )
 
     job_seekers = read_csv(
         file_path=job_seekers_file_path,
         file_columns=job_seeker_columns,
-        init_row=init_job_seeker,
+        init_row=read_job_seeker,
         ignore_header=True,
     )
 

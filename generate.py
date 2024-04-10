@@ -2,11 +2,12 @@
 Print matches for CSV files in dataset directory using specified matcher
 """
 
+from os import write
 import click
 import csv
 
-from lib.data.jobs import fake_job, job_columns
-from lib.data.job_seekers import fake_job_seeker, job_seeker_columns
+from lib.data.jobs import fake_job, job_columns, write_job
+from lib.data.job_seekers import fake_job_seeker, job_seeker_columns, write_job_seeker
 
 
 JOBS_CSV_PATH = "datasets/generated/jobs.csv"
@@ -22,7 +23,7 @@ def command(num_jobs=1000, num_job_seekers=1000):
         writer = csv.DictWriter(csvfile, fieldnames=job_columns)
         writer.writeheader()
         for i in range(num_jobs):
-            writer.writerow(fake_job(id=i + 1))
+            writer.writerow(write_job(fake_job(id=i + 1)))
 
     print(f"Wrote {num_jobs} jobs to {JOBS_CSV_PATH}")
 
@@ -30,7 +31,7 @@ def command(num_jobs=1000, num_job_seekers=1000):
         writer = csv.DictWriter(csvfile, fieldnames=job_seeker_columns)
         writer.writeheader()
         for i in range(num_job_seekers):
-            writer.writerow(fake_job_seeker(id=i + 1))
+            writer.writerow(write_job_seeker(fake_job_seeker(id=i + 1)))
 
     print(f"Wrote {num_job_seekers} job seekers to {JOB_SEEKERS_CSV_PATH}")
 

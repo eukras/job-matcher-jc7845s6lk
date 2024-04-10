@@ -1,19 +1,30 @@
 from faker import Faker
 
-from ..skills import fake_skillset, split_skills_list
+from ..skills import fake_skillset, join_skills_list, split_skills_list
 
 
 job_columns = ["id", "title", "required_skills"]
 
 
-def init_job(_: dict) -> dict:
+def read_job(_: dict) -> dict:
     """
-    Preprocess CSV strings.
+    Read CSV strings into program structure
     """
     return dict(
         id=int(_["id"]),
         title=_["title"],
         required_skills=split_skills_list(_["required_skills"]),
+    )
+
+
+def write_job(_: dict) -> dict:
+    """
+    Write CSV strings from program structure
+    """
+    return dict(
+        id=str(_["id"]),
+        title=_["title"],
+        required_skills=join_skills_list(_["required_skills"]),
     )
 
 

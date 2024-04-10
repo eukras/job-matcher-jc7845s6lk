@@ -29,6 +29,15 @@ def split_skills_list(skills_list: str) -> FrozenSet[str]:
     return frozenset(skills_list.split(", "))
 
 
+def join_skills_list(skills_list: FrozenSet[str]) -> str:
+    """
+    Turn a comma-space separated strings into a set.
+
+    This must be a frozenset so it can be used for hashing.
+    """
+    return ", ".join(list(skills_list))
+
+
 def fake_skillset(_min=1, _max=6) -> FrozenSet[str]:
     """
     Generate a set of random skills.
