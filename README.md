@@ -9,7 +9,7 @@ Match jobseekers to jobs by skills.
 
 * `main.py` performs the given matching challenge of 10 jobs and 10 job seekers in ~80ms, producing 49 matches.
 * It matches jobs and job_seeker files of 10,000 lines each in ~15s, producing ~4,000,000 matches. 
-* Two matching strategies were implemented, naivce and preemptive, and found to perform about the same.
+* Two matching strategies were implemented, naive and preemptive, and found to perform about the same.
 * If we can discard matches under 50%, however, the preemptive matching strategy can cut this time to 8-9s. 
 
 
@@ -33,7 +33,7 @@ Match jobseekers to jobs by skills.
 * Extendibility: If we needed to add additional functionality, how difficult would this be?
   * The strategy pattern allows easy extension and comparison.
 * Efficiency: How well does your program handle large inputs?
-  * It's tested on 10,000 job and job_seekers as noted. 
+  * It's tested up to 10,000 job and 10,000 job_seekers as noted (15s). 
 * Tests: Is your code covered by automated tests?
   * Just run `python -m pytest test/` for results.
   * Or for code coverage: `coverage report -m` (85%).
@@ -74,7 +74,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS]
 
   Match jobs to job seekers in a specified dataset, using a specified matching
-  strategy, and tabulate the results.
+  strategy, and write out the results.
 
 Options:
   --dataset [challenge|generated]
@@ -87,6 +87,9 @@ Options:
 ```
 $ python generate.py --help
 Usage: generate.py [OPTIONS]
+
+  Write a specified number of jobs and job_seekers to the CSV files in
+  dataset/generated/.
 
 Options:
   --num_jobs INTEGER         [default: (1000)]
