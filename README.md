@@ -317,15 +317,15 @@ Not much to be gained by caching, though. Putting an LRU cache on the percentage
 
 The naive implementation is not as slow as might be expected for brute-forcing 100,000,000 skillset comparisons. 
 
-However, it is O(n^2), and we can probably improve that at the cost of keeping more data in memory.
+However, it is O(n^2), and we can probably improve that at the cost of keeping more data in memory. We'll still be O(n^2), but can cut the n size considerably. 
 
-In this approach, we read through jobs and jobseekers to create an index of unique skill sets. We compare the possible skillset combinations and then expand this to include the jobs and job seekers that have those skills. 
+In this approach, we read through jobs and jobseekers to create an index of unique skill sets for each. For each possible skillset and subset in our data, we calculate the total and percentage. We sort these, then for each combination, we then loop through the jobs and job_seekers we've indexed. This generates the output in the correct order and needs no subsequent result sorting.
 
-Unfortunately, this performs just about identically to the naive implementation on large and small datasets. So, is not worth the added complexity:
+Unfortunately, this performs just about identically to the naive implementation on large and small datasets, so is not worth the added complexity:
 
 ```
 time python main.py --matcher=preemptive                      # <-- Still about 80ms
 time python main.py --matcher=preemptive --dataset=generated  # <-- Still about 30s (or 15s if piped to a file)
 ```
 
-However, this approach would be much faster if we were to apply a threshold to the percentage matches we would accept. The great majority of matches are for only one skill, and for under a 60% match. If I change the preemptive strategy to ignore anything under 60%, which it will do more efficiently than the naive strategy, then we get to 8-9s.
+However, this approach would be much faster if we were to apply a threshold to the percentage matches we would accept. Which is a possible use case. The great majority of matches are for only one skill, and for under a 60% match. If I change the preemptive strategy to ignore anything under 60%, which it can do early in the process, then we get down to 8-9s.
