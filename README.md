@@ -319,7 +319,7 @@ The naive implementation is not as slow as might be expected for brute-forcing 1
 
 However, it is O(n^2), and we can probably improve that at the cost of keeping more data in memory. We'll still be O(n^2), but can cut the n size considerably. 
 
-In this approach, we read through jobs and jobseekers to create an index of unique skill sets for each. For each possible skillset and subset in our data, we calculate the total and percentage. We sort these, then for each combination, we then loop through the jobs and job_seekers we've indexed. This generates the output in the correct order and needs no subsequent result sorting.
+In this approach, we read through jobs and jobseekers to create an index of unique skill sets for each. For each possible skillset and subset in our data, we calculate the total and percentage. We sort these, then for each combination, we loop through the jobs and job_seekers we've indexed. This generates the output in the correct order and needs no subsequent result sorting.
 
 Unfortunately, this performs just about identically to the naive implementation on large and small datasets, so is not worth the added complexity:
 
